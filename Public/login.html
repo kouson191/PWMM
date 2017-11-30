@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>后台管理系统</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../Css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="../Css/bootstrap-responsive.css" />
+    <link rel="stylesheet" type="text/css" href="../Css/style.css" />
+    <script type="text/javascript" src="../Js/jquery.js"></script>
+    <script type="text/javascript" src="../Js/jquery.sorted.js"></script>
+    <script type="text/javascript" src="../Js/bootstrap.js"></script>
+    <script type="text/javascript" src="../Js/ckform.js"></script>
+    <script type="text/javascript" src="../Js/common.js"></script>
+    <script type="text/javascript" src="../Js/jquerysession.js"></script> 
+    
+    <style type="text/css">
+        body {
+            padding-top: 40px;
+            padding-bottom: 40px;
+            background-color: #f5f5f5;
+        }
+
+        .form-signin {
+            max-width: 300px;
+            padding: 19px 29px 29px;
+            margin: 0 auto 20px;
+            background-color: #fff;
+            border: 1px solid #e5e5e5;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
+            -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
+        }
+
+        .form-signin .form-signin-heading,
+        .form-signin .checkbox {
+            margin-bottom: 10px;
+        }
+
+        .form-signin input[type="text"],
+        .form-signin input[type="password"] {
+            font-size: 16px;
+            height: auto;
+            margin-bottom: 15px;
+            padding: 7px 9px;
+        }
+
+
+        .code {
+            background: url(../Images/code_bg.jpg);
+            font-family: Arial;
+            font-style: italic;
+            color: blue;
+            font-size: 24px;
+            border: 0;
+            padding: 2px 3px;
+            letter-spacing: 3px;
+            font-weight: bolder;
+            float: left;
+            cursor: pointer;
+            width: 80px;
+            height: 60px;
+            line-height: 60px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        a {
+            text-decoration: none;
+            font-size: 12px;
+            color: #288bc4;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+
+    <script type="text/javascript">
+        var code;
+
+        function createCode() {
+            code = "";
+            var codeLength = 4; //验证码的长度
+            var checkCode = document.getElementById("checkCode");
+            var codeChars = new Array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
+                'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+                'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'); //所有候选组成验证码的字符，当然也可以用中文的
+            for (var i = 0; i < codeLength; i++) {
+                var charNum = Math.floor(Math.random() * 52);
+                code += codeChars[charNum];
+            }
+            if (checkCode) {
+                checkCode.className = "code";
+                checkCode.innerHTML = code;
+            }
+        }
+
+        function validateCode() {
+            var inputCode = document.getElementById("inputCode").value;
+            if (inputCode.length <= 0) {
+                alert("请输入验证码！");
+                return false;
+            } else if (inputCode.toUpperCase() != code.toUpperCase()) {
+                alert("验证码输入有误！");
+                createCode();
+                return false;
+            } else {
+                window.location.href = '../index.html';
+                return true;
+            }
+        }
+
+        $(function() {
+            $("#submitbutton").click(function() {
+                userName = $("#username").val();
+                passWord = $("#password").val();
+                 $.session.set('username', username);
+                window.location.href = "../index.html";
+                //$.session.set('userName', userName);
+//                if (ok1 && ok2) { //普通方式      
+//                    $.ajax({
+//                        url: "/Login/ValidUser",
+//                        type: "POST",
+//                        dataType: "json",
+//                        data: {
+//                            username: "+username+",
+//                            password: "+password+"
+//                        },
+//                        success: function() {
+//                            //记录用户名、昵称
+//                            window.userName = userName;
+//                            window.location.href = "../index.html";
+//                        },
+//                        error: function() {
+//                             alert("请重新登录");
+//                        }
+//                    });
+//                }
+                return false; //抑制了浏览器的默认点击行为
+            });
+        });
+
+    </script>
+
+</head>
+
+<body onload="createCode()">
+    <div class="container">
+        <form class="form-signin" role="form" action="/" method="POST" enctype="text/plain">
+            <table border="0" width="100%">
+                <tr>
+                    <td colspan="2">
+                        <div>
+                            <h2 class="form-signin-heading">登录</h2>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <div> <input type="text" id="username" class="input-block-level" placeholder="账号"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+
+                        <input type="password" id="password" class="input-block-level" placeholder="密码"> </td>
+                </tr>
+                <tr>
+                    <td><input type="text" name="verify" id="inputCode" class="input-medium" placeholder="验证码"></td>
+
+                    <td>
+                        <div class="code" id="checkCode" onclick="createCode()"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <p><button class="btn btn-large btn-primary" id="submitbutton">登录</button></p>
+                    </td>
+                </tr>
+            </table>
+
+        </form>
+
+    </div>
+</body>
+
+</html>
