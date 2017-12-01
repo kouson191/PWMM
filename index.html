@@ -19,9 +19,8 @@
             var UserName = $.session.get('userName'); //获取登录用户命名
             
             if (UserName == '' || UserName == undefined){ 
-                window.location.href = "Public/login.html";
-            }
-            
+                window.location.href = "../Public/login.html";
+            } 
             
             $("#userName").html(UserName);
 
