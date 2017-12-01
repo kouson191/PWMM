@@ -18,17 +18,8 @@
         $(function() {  
             var UserName = $.session.get('userName'); //获取登录用户命名
             
-            if (UserName == '' || UserName == undefined){ 
-<<<<<<< HEAD
-                window.location.href = "Public/login.html";
-=======
-<<<<<<< HEAD
-		window.location.href = "Public/login.html";
-		
-=======
-                window.location.href = "../Public/login.html";
->>>>>>> b1f0f02109821c030ca4edffda6a41bfbd89fb0d
->>>>>>> de47d3f464fcf9a6e8f807ac4868257b93f2a01e
+            if (UserName == '' || UserName == undefined){  
+                window.location.href = "Public/login.html"; 
             } 
             
             $("#userName").html(UserName);
@@ -65,8 +56,8 @@
                     text: '业务管理',
                     items: [{
                         id: '9',
-                        text: '查询业务',
-                        href: 'Node/index.html'
+                        text: '文章管理',
+                        href: 'article/index.html'
                     }]
                 }]
             }];
