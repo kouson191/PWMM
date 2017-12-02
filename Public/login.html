@@ -119,11 +119,9 @@
         $(function() { 
             
             $("#submitbutton").click(function() {
-                if (!validateCode()) return false; 
-            
+                if (!validateCode()) return false;  
                 userName = $("#username").val();
-                passWord = $("#password").val(); 
-                alert( window.WebApiServer + "user/verifyUser");
+                passWord = $("#password").val();  
                 $.ajax({
                     url: window.WebApiServer + "user/verifyUser",
                     type: "GET",
