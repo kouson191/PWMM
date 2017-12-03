@@ -123,11 +123,12 @@
             
                 userName = $("#username").val();
                 passWord = $("#password").val(); 
-                alert( window.WebApiServer + "user/verifyUser");
+               // alert( window.WebApiServer + "user/verifyUser");
                 $.ajax({
                     url: window.WebApiServer + "user/verifyUser",
                     type: "GET",
-                    dataType: "json",
+                    dataType: "json", 
+                    async: false,
                     data: {
                         user_name: userName,
                         user_pwd: passWord
