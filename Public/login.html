@@ -122,6 +122,10 @@
                 if (!validateCode()) return false;  
                 userName = $("#username").val();
                 passWord = $("#password").val(); 
+<<<<<<< HEAD
+=======
+               // alert( window.WebApiServer + "user/verifyUser");
+>>>>>>> 7752a27973e18763bda3c0871b228be07e6cd5d3
                 $.ajax({
                     url: window.WebApiServer + "user/verifyUser",
                     type: "GET",

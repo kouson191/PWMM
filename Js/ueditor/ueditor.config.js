@@ -30,7 +30,11 @@
         UEDITOR_HOME_URL: URL
 
         // 服务器统一请求接口路径
+<<<<<<< HEAD
         , serverUrl:  "http://120.78.141.165/uploadService/controller.ashx"
+=======
+        , serverUrl: URL + "net/controller.ashx"
+>>>>>>> 7752a27973e18763bda3c0871b228be07e6cd5d3
 
         //工具栏上的所有的功能按钮和下拉框，可以在new编辑器的实例时选择自己需要的重新定义
         , toolbars: [[
