@@ -7,106 +7,229 @@
     <link rel="stylesheet" type="text/css" href="../Css/bootstrap.css" />
     <link rel="stylesheet" type="text/css" href="../Css/bootstrap-responsive.css" />
     <link rel="stylesheet" type="text/css" href="../Css/style.css" />
-    <link rel="stylesheet" type="text/css" href="../Css/GridManager.css" />
-
-
 
     <script type="text/javascript" src="../Js/jquery.js"></script>
     <script type="text/javascript" src="../Js/jquery.sorted.js"></script>
     <script type="text/javascript" src="../Js/bootstrap.js"></script>
     <script type="text/javascript" src="../Js/ckform.js"></script>
     <script type="text/javascript" src="../Js/common.js"></script>
-    <script type="text/javascript" src="../Js/GridManager.js"></script>
+    <script type="text/javascript" src="../Js/jquerysession.js"></script>
+    <script type="text/javascript" src="../Js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="../Js/app.js"></script>
+
+    <script type="text/javascript" charset="utf-8" src="../Js/ueditor/ueditor.config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../Js/ueditor/ueditor.all.js">
+
+
+    </script>
 
     <style type="text/css">
-        body {
-            padding-bottom: 40px;
-        }
-
-        .sidebar-nav {
-            padding: 9px 0;
-        }
-
-        @media (max-width: 980px) {
-            /* Enable use of floated navbar text */
-            .navbar-text.pull-right {
-                float: none;
-                padding-left: 5px;
-                padding-right: 5px;
-            }
-        }
-
+       
     </style>
 
 
     <script>
-         
+        var pageSize = 20;
+        $(function() {
+            function getList(stype, pageIndex) { //获取详细列表    
+                /**
+                 * stype=0 点击查询按钮 
+                 * stype=1 点击分页按钮
+                 */
+                $("#daListContainer").children().remove();
+                var title = $("#seTitle").val(),
+                    sort = $("#seSort").val(),
+                    status = $("#seStatus").val();
 
-        /* $("#searchData").click(function() {
+                var strWhere = "article_title like '%25" + title + "%25'";
+                if (sort != "") {
+                    strWhere += " and  article.sort_id = " + sort
+                }
 
-            
-            $.ajax({
-                    url: window.WebApiServer + "user/verifyUser",
-                    type: "GET",
+                if (status != "") {
+                    strWhere += " and  article.article_status = " + status
+                }
+
+                $.ajax({
+                    type: "Get",
+                    async: false,
+                    url: window.WebApiServer + "Article/GetList?strWhere=" + strWhere + "&pageSize=" + pageSize + "&pageIndex=" + pageIndex,
+                    //                    beforeSend: function(XHR) {
+                    //                        XHR.setRequestHeader('Authorization', 'BasicAuth ' + window.Ticket);
+                    //                    },
                     dataType: "json",
-                    data: {
-                        user_name: userName,
-                        user_pwd: passWord
-                    },
                     success: function(response) {
+                        var da = response.ReturnObject,
+                            str = "",
+                            page = "",
+                            count = response.PageCount;
 
-                        if (response.ReturnObject) {
 
-                            //记录用户名、昵称
-                            $.session.set('userName', userName);
-                            window.location.href = "../index.html";
-                        } else { 
-                            alert("用户名或密码错误!");
-
+                        if (da.length == 0) {
+                            return false;
                         }
+
+                        for (d in da) {
+                            var index = parseInt(d) + 1;
+
+                            str += "<tr><td>" + index + "</td>";
+                            str += "<td>" + da[d].article_title + "</td>";
+                            str += "<td>" + da[d].article_created + "</td>";
+                            str += "<td>" + da[d].article_creator + "</td>";
+                            str += "<td>" + da[d].article_changed + "</td>";
+                            str += "<td>" + da[d].article_changer + "</td>";
+                            str += "<td>" + da[d].article_click + "</td>";
+                            str += "<td>" + da[d].sort_name + "</td>";
+                            if (da[d].article_up = 1) {
+                                str += "<td><input type=\"checkbox\" checked=\"checked\" /></td>  ";
+                            } else {
+                                str += "<td><input type=\"checkbox\" /></td>  ";
+                            }
+
+                            if (da[d].article_support = 1) {
+                                str += "<td><input type=\"checkbox\" checked=\"checked\" /></td>  ";
+                            } else {
+                                str += "<td><input type=\"checkbox\" /></td>  ";
+                            }
+
+                            if (da[d].article_status = 1) {
+                                str += "<td>有效</td>  ";
+                            } else {
+                                str += "<td>无效</td>  ";
+                            }
+
+                            str += "<td><a class=\"btn btn-azure\" style=\"padding:0px 8px;\" href=\"javascript:void(0)\" onclick=\"modByID('" + da[d].article_id + "')\">修改</a>";
+                            str += "<a class=\"btn btn-azure\" style=\"padding:0px 8px;\" href=\"javascript:void(0)\" onclick=\"delByID('" + da[d].article_id + "')\">删除</a></td>";
+                            str += "</tr>";
+                        }
+                        $("#daListContainer").append(str);
+
+
+                        if (stype == 0) {
+                            dolistpage(pageSize, 1, da.length, count);
+                        }
+
                     },
-                    error: function() {
-                        alert("请重新登录");
+                    error: function(e) {
+                        console.log(e);
+                    },
+                    complete: function() {
+                        $(".overlay").addClass("hidden");
                     }
-             
-            return false;
-        });
+                });
 
-      
-
-        $('#addnew').click(function() {
-
-            window.location.href = "add.html";
-        });
-        */
-        $(function() {});
-
-        function del(id) {
+            };
 
 
-            if (confirm("确定要删除吗？")) {
+            $("#daQuery").on("click", function(event) { //查询按钮点击事件
+                event.preventDefault();
+                $("#daListPage").children().remove();
+                getList(0, 1);
+            });
 
-                var url = "index.html";
 
-                window.location.href = url;
 
+
+            function dolistpage(pagerow, pagenum, rowcount, pagecount) {
+                $("#pagemsg").html("每页显示" + pagerow + "条，当前" + pagenum + "/" + pagecount + "页 共" + rowcount + "条");
+                //                if (pagenum == 1) {
+                //                    $("#fpbtn").attr("disabled", true);
+                //                    $("#rpbtn").attr("disabled", true);
+                //                } else {
+                //                    $("#fpbtn").removeAttr("disabled");
+                //                    $("#rpbtn").removeAttr("disabled");
+                //                }
+                //                if (pagenum == pagecount) {
+                //                    $("#npbtn").attr("disabled", true);
+                //                    $("#lpbtn").attr("disabled", true);
+                //                } else {
+                //                    $("#npbtn").removeAttr("disabled");
+                //                    $("#lpbtn").removeAttr("disabled");
+                //                }
+                $("#fpbtn").click(function() {
+                    getList(1, 1);
+                });
+                $("#rpbtn").click(function() {
+                    getList(1, pagenum - 1);
+                });
+                $("#npbtn").click(function() {
+                    if ((pagenum + 1) >= pagecount)
+                        getList(1, pagecount);
+                    else
+                        getList(1, pagenum + 1);
+                });
+                $("#lpbtn").click(function() {
+                    getList(1, pagecount);
+                });
+                $("#gpbtn").click(function() {
+                    var tzys = $("#gpinput").val();
+                    var re = /^[1-9]+[0-9]*$/;
+                    if (tzys == null || tzys == undefined || tzys == '') {
+                        alert("请输入跳转页数!");
+                        $("#gpinput").focus();
+                        return;
+                    }
+                    if (!re.test(tzys)) {
+                        alert("请输入正确跳转页数!");
+                        $("#gpinput").focus();
+                        return;
+                    }
+                    if (tzys > pagecount)
+                        tzys = pagecount;
+                    if (tzys <= 0)
+                        tzys = 1;
+                    getList(1, tzys);
+                });
+                $("#gpinput").val(pagenum);
             }
 
-        }
+
+
+        });
+
+
+        //修改
+        function modByID(articleID) {
+
+           // $("#myModal").modal("show");
+
+        };
+
+        //删除
+        function delByID(articleID) {
+
+
+        };
 
     </script>
 
 </head>
 
-<body>  
-    <form class="form-inline definewidth m20" action="/" onsubmit="return false" method="POST" enctype="text/plain">
+<body>
+   <form class="form-inline definewidth m20" action="/" onsubmit="return false" method="POST" enctype="text/plain">
         标题：
-        <input type="text" name="rolename" id="rolename" class="abc input-default" placeholder="" value="">&nbsp;&nbsp;
-        <button id="searchData" class="btn btn-primary">查询</button>&nbsp;&nbsp; <button type="button" class="btn btn-success" id="addnew">新增</button>
+        <input type="text"  id="seTitle" value="">&nbsp;&nbsp;
+        <label>所属分类</label>
+        <select id="seSort">
+                <option value="" ></option>
+                <option value="1">Android</option>
+                <option value="2">JAVA</option>
+                <option value="3">.NET</option>
+              </select>
+
+        <label>状态</label>
+        <select id="seStatus">
+                <option value="" ></option>
+                <option value="1" selected="selected">有效</option>
+                <option value="0">无效</option> 
+              </select>
+
+        <button id="daQuery" class="btn btn-primary">查询</button>&nbsp;&nbsp; <button type="button" class="btn btn-success" id="addnew">新增</button>
     </form>
     <table class="table table-bordered table-hover definewidth m10">
         <thead>
             <tr>
+                <th>序号</th>
                 <th>标题</th>
                 <th>发布时间</th>
                 <th>发布人</th>
@@ -120,9 +243,107 @@
                 <th>操作</th>
             </tr>
         </thead>
-        <tbody id="listArticle"></tbody>
-        <tfoot id="pageArticle"></tfoot>
-    </table> 
+        <tbody id="daListContainer"></tbody>
+        <tfoot>
+            <tr>
+                <td colspan="13">
+                    <span class="water-table-listbtn"></span>
+                    <span class="water-table-page">
+     <span id="pagemsg" class="water-table-pagemsg">当前0/0页</span>
+                    <input type="button" id="fpbtn" value="首页" />
+                    <input type="button" id="rpbtn" value="上页" />
+                    <input type="button" id="npbtn" value="下页" />
+                    <input type="button" id="lpbtn" value="尾页" />
+                    <span id="pagemsg" class="water-table-pagemsg">跳转
+     <input type="text" id="gpinput" size="3" value="0" style="width:50px;height=20px;"/>页
+     </span>
+                    <input type="button" id="gpbtn" value="跳转" />
+                    </span>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+
+    
+    <!--<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 800px;height: 800px">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">编辑数据</h4>
+                </div>
+                <div class="modal-body">
+                    <form name="input" action="" method="get"> 
+                        <div class="m-mb-from">
+                            <table class="m-modal-1" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <th>标题</th>
+                                    <td>
+                                        <div><input type="text" id="moTitle" /></div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>所属分类</th>
+                                    <td>
+                                        <div>
+                                            <select class="u-search-select" id="moSort">
+                                            <option value="" ></option>
+                                            <option value="1">Android</option>
+                                            <option value="2">JAVA</option>
+                                            <option value="3">.NET</option>
+                                        </select>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>置顶</th>
+                                    <td>
+                                        <div>
+                                            <select class="u-search-select" id="moUp">
+                                            <option value="1">是</option>
+                                            <option value="0">否</option> 
+                                            </select>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>推荐</th>
+                                    <td>
+                                        <div>
+                                            <select class="u-search-select" id="moSupport">
+                                            <option value="1">是</option>
+                                            <option value="0">否</option> 
+                                            </select>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>状态</th>
+                                    <td>
+                                        <div>
+                                            <select class="u-search-select" id="moStatus">
+                                            <option value="1">有效</option>
+                                            <option value="0">无效</option> 
+                                            </select>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                            </table>
+                        </div>
+
+                        <script id="editor" type="text/plain" style="width:1024px;height:500px;"></script>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                            <button type="submit" class="btn btn-azure">保存</button>
+                        </div>
+                    </form>
+                </div>
+            </div> 
+        </div> 
+    </div>-->
+ 
+
 </body>
 
 </html>
