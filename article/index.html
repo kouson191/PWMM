@@ -16,22 +16,76 @@
     <script type="text/javascript" src="../Js/jquerysession.js"></script>
     <script type="text/javascript" src="../Js/jquery-ui.min.js"></script>
     <script type="text/javascript" src="../Js/app.js"></script>
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 26f4411df98b585672da696f627a9957d8fcb5eb
 
     <script type="text/javascript" charset="utf-8" src="../Js/ueditor/ueditor.config.js"></script>
     <script type="text/javascript" charset="utf-8" src="../Js/ueditor/ueditor.all.js">
 
 
     </script>
+<<<<<<< HEAD
 
     <style type="text/css">
        
+=======
+
+    <style type="text/css">
+       
+=======
+     
+
+    <style type="text/css">
+        body {
+            padding-bottom: 40px;
+        }
+
+        .sidebar-nav {
+            padding: 9px 0;
+        }
+
+        @media (max-width: 980px) {
+            /* Enable use of floated navbar text */
+            .navbar-text.pull-right {
+                float: none;
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+        }
+>>>>>>> 7752a27973e18763bda3c0871b228be07e6cd5d3
+>>>>>>> 26f4411df98b585672da696f627a9957d8fcb5eb
     </style>
 
 
     <script>
         var pageSize = 20;
+<<<<<<< HEAD
         $(function() {
 
+=======
+<<<<<<< HEAD
+        $(function() {
+            function getList(stype, pageIndex) { //获取详细列表    
+                /**
+                 * stype=0 点击查询按钮 
+                 * stype=1 点击分页按钮
+                 */
+                $("#daListContainer").children().remove();
+                var title = $("#seTitle").val(),
+                    sort = $("#seSort").val(),
+                    status = $("#seStatus").val();
+
+                var strWhere = "article_title like '%25" + title + "%25'";
+                if (sort != "") {
+                    strWhere += " and  article.sort_id = " + sort
+                }
+
+=======
+        $(function() { 
+            
+>>>>>>> 26f4411df98b585672da696f627a9957d8fcb5eb
             //为Bootstrap Modal（模态框）全局添加拖拽操作
             $(document).on("show.bs.modal", ".modal", function() {
                 $(this).draggable({
@@ -71,6 +125,7 @@
                     strWhere += " and  article.sort_id = " + sort
                 }
 
+>>>>>>> 7752a27973e18763bda3c0871b228be07e6cd5d3
                 if (status != "") {
                     strWhere += " and  article.article_status = " + status
                 }
@@ -93,6 +148,7 @@
                         if (da.length == 0) {
                             return false;
                         }
+<<<<<<< HEAD
 
                         for (d in da) {
                             var index = parseInt(d) + 1;
@@ -138,10 +194,58 @@
                     error: function(e) {
                         console.log(e);
                     },
+=======
+
+                        for (d in da) {
+                            var index = parseInt(d) + 1;
+
+                            str += "<tr><td>" + index + "</td>";
+                            str += "<td>" + da[d].article_title + "</td>";
+                            str += "<td>" + da[d].article_created + "</td>";
+                            str += "<td>" + da[d].article_creator + "</td>";
+                            str += "<td>" + da[d].article_changed + "</td>";
+                            str += "<td>" + da[d].article_changer + "</td>";
+                            str += "<td>" + da[d].article_click + "</td>";
+                            str += "<td>" + da[d].sort_name + "</td>";
+                            if (da[d].article_up = 1) {
+                                str += "<td><input type=\"checkbox\" checked=\"checked\" /></td>  ";
+                            } else {
+                                str += "<td><input type=\"checkbox\" /></td>  ";
+                            }
+
+                            if (da[d].article_support = 1) {
+                                str += "<td><input type=\"checkbox\" checked=\"checked\" /></td>  ";
+                            } else {
+                                str += "<td><input type=\"checkbox\" /></td>  ";
+                            }
+
+                            if (da[d].article_status = 1) {
+                                str += "<td>有效</td>  ";
+                            } else {
+                                str += "<td>无效</td>  ";
+                            }
+
+                            str += "<td><a class=\"btn btn-azure\" style=\"padding:0px 8px;\" href=\"javascript:void(0)\" onclick=\"modByID('" + da[d].article_id + "')\">修改</a>";
+                            str += "<a class=\"btn btn-azure\" style=\"padding:0px 8px;\" href=\"javascript:void(0)\" onclick=\"delByID('" + da[d].article_id + "')\">删除</a></td>";
+                            str += "</tr>";
+                        }
+                        $("#daListContainer").append(str);
+
+
+                        if (stype == 0) {
+                            dolistpage(pageSize, 1, da.length, count);
+                        }
+
+                    },
+                    error: function(e) {
+                        console.log(e);
+                    },
+>>>>>>> 7752a27973e18763bda3c0871b228be07e6cd5d3
                     complete: function() {
                         $(".overlay").addClass("hidden");
                     }
                 });
+<<<<<<< HEAD
 
             };
 
@@ -211,12 +315,101 @@
 
 
         });
+=======
+
+            };
+
+
+            $("#daQuery").on("click", function(event) { //查询按钮点击事件
+                event.preventDefault();
+                $("#daListPage").children().remove();
+                getList(0, 1);
+            });
+>>>>>>> 7752a27973e18763bda3c0871b228be07e6cd5d3
 
 
         //修改
         function modByID(articleID) {
 
+<<<<<<< HEAD
            // $("#myModal").modal("show");
+
+        };
+
+        //删除
+        function delByID(articleID) {
+
+
+        };
+=======
+
+            function dolistpage(pagerow, pagenum, rowcount, pagecount) {
+                $("#pagemsg").html("每页显示" + pagerow + "条，当前" + pagenum + "/" + pagecount + "页 共" + rowcount + "条");
+                //                if (pagenum == 1) {
+                //                    $("#fpbtn").attr("disabled", true);
+                //                    $("#rpbtn").attr("disabled", true);
+                //                } else {
+                //                    $("#fpbtn").removeAttr("disabled");
+                //                    $("#rpbtn").removeAttr("disabled");
+                //                }
+                //                if (pagenum == pagecount) {
+                //                    $("#npbtn").attr("disabled", true);
+                //                    $("#lpbtn").attr("disabled", true);
+                //                } else {
+                //                    $("#npbtn").removeAttr("disabled");
+                //                    $("#lpbtn").removeAttr("disabled");
+                //                }
+                $("#fpbtn").click(function() {
+                    getList(1, 1);
+                });
+                $("#rpbtn").click(function() {
+                    getList(1, pagenum - 1);
+                });
+                $("#npbtn").click(function() {
+                    if ((pagenum + 1) >= pagecount)
+                        getList(1, pagecount);
+                    else
+                        getList(1, pagenum + 1);
+                });
+                $("#lpbtn").click(function() {
+                    getList(1, pagecount);
+                });
+                $("#gpbtn").click(function() {
+                    var tzys = $("#gpinput").val();
+                    var re = /^[1-9]+[0-9]*$/;
+                    if (tzys == null || tzys == undefined || tzys == '') {
+                        alert("请输入跳转页数!");
+                        $("#gpinput").focus();
+                        return;
+                    }
+                    if (!re.test(tzys)) {
+                        alert("请输入正确跳转页数!");
+                        $("#gpinput").focus();
+                        return;
+                    }
+                    if (tzys > pagecount)
+                        tzys = pagecount;
+                    if (tzys <= 0)
+                        tzys = 1;
+                    getList(1, tzys);
+                });
+                $("#gpinput").val(pagenum);
+            }
+
+
+
+        });
+
+
+        //修改
+        function modByID(articleID) {
+
+<<<<<<< HEAD
+           // $("#myModal").modal("show");
+=======
+            $("#myModal").modal("show");
+>>>>>>> 7752a27973e18763bda3c0871b228be07e6cd5d3
+>>>>>>> 26f4411df98b585672da696f627a9957d8fcb5eb
 
         };
 
@@ -231,9 +424,21 @@
 </head>
 
 <body>
+<<<<<<< HEAD
    <form class="form-inline definewidth m20" action="/" onsubmit="return false" method="POST" enctype="text/plain">
         标题：
         <input type="text"  id="seTitle" value="">&nbsp;&nbsp;
+=======
+<<<<<<< HEAD
+   <form class="form-inline definewidth m20" action="/" onsubmit="return false" method="POST" enctype="text/plain">
+        标题：
+        <input type="text"  id="seTitle" value="">&nbsp;&nbsp;
+=======
+    <form class="form-inline definewidth m20" action="/" onsubmit="return false" method="POST" enctype="text/plain">
+        标题：
+        <input type="text" name="seTitle" id="seTitle" class="abc input-default" placeholder="" value="">&nbsp;&nbsp;
+>>>>>>> 7752a27973e18763bda3c0871b228be07e6cd5d3
+>>>>>>> 26f4411df98b585672da696f627a9957d8fcb5eb
         <label>所属分类</label>
         <select id="seSort">
                 <option value="" ></option>
@@ -270,7 +475,15 @@
         </thead>
         <tbody id="daListContainer"></tbody>
         <tfoot>
+<<<<<<< HEAD
             <tr>
+=======
+<<<<<<< HEAD
+            <tr>
+=======
+            <tr> 
+>>>>>>> 7752a27973e18763bda3c0871b228be07e6cd5d3
+>>>>>>> 26f4411df98b585672da696f627a9957d8fcb5eb
                 <td colspan="13">
                     <span class="water-table-listbtn"></span>
                     <span class="water-table-page">
@@ -289,8 +502,17 @@
         </tfoot>
     </table>
 
+<<<<<<< HEAD
     
     <!--<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+=======
+<<<<<<< HEAD
+    
+    <!--<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+=======
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+>>>>>>> 7752a27973e18763bda3c0871b228be07e6cd5d3
+>>>>>>> 26f4411df98b585672da696f627a9957d8fcb5eb
         <div class="modal-dialog">
             <div class="modal-content" style="width: 800px;height: 800px">
                 <div class="modal-header">
@@ -298,7 +520,16 @@
                     <h4 class="modal-title" id="myModalLabel">编辑数据</h4>
                 </div>
                 <div class="modal-body">
+<<<<<<< HEAD
                     <form name="input" action="" method="get"> 
+=======
+<<<<<<< HEAD
+                    <form name="input" action="" method="get"> 
+=======
+                    <form name="input" action="" method="get">
+                        <!--模态框里面的内容-->
+>>>>>>> 7752a27973e18763bda3c0871b228be07e6cd5d3
+>>>>>>> 26f4411df98b585672da696f627a9957d8fcb5eb
                         <div class="m-mb-from">
                             <table class="m-modal-1" border="0" cellspacing="0" cellpadding="0">
                                 <tr>
@@ -356,18 +587,42 @@
 
                             </table>
                         </div>
+<<<<<<< HEAD
 
                         <script id="editor" type="text/plain" style="width:1024px;height:500px;"></script>
+=======
+<<<<<<< HEAD
+
+                        <script id="editor" type="text/plain" style="width:1024px;height:500px;"></script>
+=======
+   
+>>>>>>> 7752a27973e18763bda3c0871b228be07e6cd5d3
+>>>>>>> 26f4411df98b585672da696f627a9957d8fcb5eb
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                             <button type="submit" class="btn btn-azure">保存</button>
                         </div>
                     </form>
                 </div>
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 26f4411df98b585672da696f627a9957d8fcb5eb
             </div> 
         </div> 
     </div>-->
  
+<<<<<<< HEAD
+=======
+=======
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal -->
+    </div>
+
+>>>>>>> 7752a27973e18763bda3c0871b228be07e6cd5d3
+>>>>>>> 26f4411df98b585672da696f627a9957d8fcb5eb
 
 </body>
 

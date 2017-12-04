@@ -121,7 +121,15 @@
             $("#submitbutton").click(function() {
                 if (!validateCode()) return false;  
                 userName = $("#username").val();
+<<<<<<< HEAD
                 passWord = $("#password").val();  
+=======
+                passWord = $("#password").val(); 
+<<<<<<< HEAD
+=======
+               // alert( window.WebApiServer + "user/verifyUser");
+>>>>>>> 7752a27973e18763bda3c0871b228be07e6cd5d3
+>>>>>>> 26f4411df98b585672da696f627a9957d8fcb5eb
                 $.ajax({
                     url: window.WebApiServer + "user/verifyUser",
                     type: "GET",
